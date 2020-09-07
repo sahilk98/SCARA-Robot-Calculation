@@ -1,0 +1,56 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int main()
+{
+    double l1, l2, l3, l4, q1, q2, q3, phi, px, px1, px2, py, py1, py2, pz;
+    double c2, s2, th1, th2, th3, th4, ny, nx, tan1, nx1,ny1, q1r, q2r,q3r;
+    double aa1, aa2, ac1, ac2, w1, w2, w3, w4;
+    cout << "SCARA Robot Calculations" << endl;
+    cout << "Input length of link 1 (mm) : "; cin >> l1; cout << endl;
+    cout << "Input length of link 2 (mm) : "; cin >> l2; cout << endl;
+    cout << "Input length of link 3 (mm) : "; cin >> l3; cout << endl;
+    cout << "Input length of link 4 (mm) : "; cin >> l4; cout << endl;
+    cout << "Input angle q1 (from top view, degrees) : "; cin >> q1r; cout << endl;
+    cout << "Input angle q2 (from top view, degrees) : "; cin >> q2r; cout << endl;
+    cout << "Input angle from base till effector (front view, degrees) : "; cin >> q3r; cout << endl;
+    q1 = q1r*(180/3.142); q2 = q2r*(180/3.142); q3 = q3r*(180/3.142);
+    phi = q1+q2;
+    px = (l1*cos(q1))+(l2*cos(phi));
+    px1 = (-1* l1*sin(q1))-(l2*sin(phi));
+    px2 = -1*px;
+    py = (l1*sin(q1))+(l2*sin(phi));
+    py1 = px;
+    py2 = px1;
+    pz = (-1*l4)-l3;
+    c2 = (pow(px,2)+pow(py,2)-pow(l1,2)-pow(l2,2))/(2*l1*l2);
+    s2 = sqrt((1-pow(c2,2)));
+    th2 = atan((s2/c2));
+    tan1 = (((l1+(l2*c2))*py)-(l2*s2*px))/(((l1+(l2*c2))*px)-(l2*s2*py));
+    th1 = atan(tan1);
+    th3 = 0;
+    nx = (l1+l2)*cos(q3);
+    ny = (l1+l2)*sin(q3);
+    nx1 = -1*ny;
+    ny1 = nx;
+    th4 = acos((cos(th1)*nx)+(sin(th1)*ny));
+    w1 = ((px1*cos(th1+th2))+(py1*sin(th1+th2)))/(l1*sin(th1));
+    w2 = ((-py1*((l1*sin(th2))+(l2*sin(th1+th2))))-px1*((l1*cos(th1))+(l2*sin(th1+th2))))/(l1*l2*sin(th2));
+    w4 = ((ny1 * cos(th1+th2))- (nx1 * sin (th1+th2)) - ((w1+w2)*((nx*cos(th1+th2))+(ny*sin(th1+th2)))));
+    aa1 = ((((px1*sin(th1+th2))+(py1*cos(th1+th2)))*(w1+w2))+((px2*cos(th1+th2))+(py2*sin(th1+th2)))-(l1*cos(th2)*w1*w2));
+
+    ac1 = ((((py2*sin(th1))-(px2*cos(th1)))*l1)-(((px2*cos(th1+th2))+(py2*sin(th1+th2)))*l2)+((py1*cos(th1))-(px1*sin(th1)))*l2*w1*w2)/(l1*l2*sin(th1+th2));
+
+    ac2 = ((((py1*cos(th1+th2))+(px1*sin(th1+th2)))*l2 *(w1+w2))+(l1*l2*cos(th2)*w2))/(l1*l2*sin(th1));
+
+    aa2 = (ac1+ac2);
+
+    cout << "angular acceleration link 1 : " << aa1 << " rad/s^2"<< endl;
+    cout << "angular acceleration link 2 : " << aa2 << " rad/s^2" <<endl;
+
+
+
+    return 0;
+}
